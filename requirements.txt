@@ -1,0 +1,17 @@
+scikit-learn
+fastapi==0.104.1
+pandas
+scikit-learn
+xgboost
+optuna
+mlflow
+numpy
+matplotlib
+seaborn
+uvicorn
+python-multipart
+pydentic
+imblearn
+pyspark
+optuna-integration
+joblib
