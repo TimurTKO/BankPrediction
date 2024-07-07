@@ -5,7 +5,35 @@
       <list>
         <JupyterConnectionParameters>
           <option name="authType" value="notebook" />
+          <option name="urlString" value="http://127.0.0.1:8073" />
+          <authParams2>
+            <map />
+          </authParams2>
+        </JupyterConnectionParameters>
+        <JupyterConnectionParameters>
+          <option name="authType" value="notebook" />
+          <option name="urlString" value="http://127.0.0.1:8076" />
+          <authParams2>
+            <map />
+          </authParams2>
+        </JupyterConnectionParameters>
+        <JupyterConnectionParameters>
+          <option name="authType" value="notebook" />
+          <option name="urlString" value="http://127.0.0.1:8079" />
+          <authParams2>
+            <map />
+          </authParams2>
+        </JupyterConnectionParameters>
+        <JupyterConnectionParameters>
+          <option name="authType" value="notebook" />
           <option name="urlString" value="http://localhost:8002" />
+          <authParams2>
+            <map />
+          </authParams2>
+        </JupyterConnectionParameters>
+        <JupyterConnectionParameters>
+          <option name="authType" value="notebook" />
+          <option name="urlString" value="http://localhost:8073" />
           <authParams2>
             <map />
           </authParams2>
@@ -18,7 +46,7 @@
           <value>
             <JupyterConnectionParameters>
               <option name="authType" value="notebook" />
-              <option name="urlString" value="http://localhost:8002" />
+              <option name="urlString" value="http://127.0.0.1:8079" />
               <authParams2>
                 <map />
               </authParams2>
