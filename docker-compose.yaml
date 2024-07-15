@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  spark:
+    build: .
+    ports:
+      - "8079:19888"
+    volumes:
+      - /c/Users/Timur/DataspellProjects/Bankprediction/train.csv:/opt/spark/work-dir/files/train.csv
+
