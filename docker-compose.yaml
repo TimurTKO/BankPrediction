@@ -6,4 +6,5 @@ services:
       - "8079:19888"
     volumes:
       - /c/Users/Timur/DataspellProjects/Bankprediction/train.csv:/opt/spark/work-dir/files/train.csv
+      - /home/liontim94/mlruns:/app/mlruns
 
