@@ -5,6 +5,6 @@ services:
     ports:
       - "8095:19888"
     volumes:
-      - /c/Users/Timur/DataspellProjects/Bankprediction/train.csv:/opt/spark/work-dir/files/train.csv
+      #- /c/Users/Timur/DataspellProjects/Bankprediction/train.csv:/opt/spark/work-dir/files/train.csv
       - /home/liontim94/mlruns:/app/mlruns
 
