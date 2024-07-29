@@ -1,6 +1,5 @@
-FROM spark:3.5.1-scala2.12-java17-python3-r-ubuntu
+FROM python:3.10
 USER root
 workdir /app
-COPY requirements.txt /opt/requirements.txt
-RUN pip install --no-cache-dir -r /opt/requirements.txt
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=19888", "--no-browser", "--allow-root", "--NotebookApp.token='1234'", "--NotebookApp.password='1234'"]
+RUN pip install mlflow
+ENTRYPOINT ["mlflow", "server", "--default-artifact-root", "/app/mlruns", "--host", "0.0.0.0", "--port", "5000"]
