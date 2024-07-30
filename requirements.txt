@@ -18,3 +18,4 @@ optuna-integration
 joblib
 ydata_profiling
 gradio
+catboost
