@@ -87,8 +87,8 @@ from pydantic import BaseModel
 
 from pyspark.ml import PipelineModel
 
-import findspark
-findspark.init()
+#import findspark
+#findspark.init()
 
 from pyspark import SparkContext, SparkConf, SQLContext
 
