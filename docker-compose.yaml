@@ -16,6 +16,10 @@ services:
       - "5000:5000"
     volumes:
       - /home/liontim94/mlruns:/app/mlruns
+      - /home/liontim94/mlflow_models:/app/mlflow_models
+
+
+
 
 
 
