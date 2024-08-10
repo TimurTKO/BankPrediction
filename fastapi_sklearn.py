@@ -94,12 +94,12 @@ RN_STATE = 42
 
 app = FastAPI()
 
-model = joblib.load("bestmodel.joblib")
+model = joblib.load("mlruns_bestmodel.joblib")
 
 def model_predict(df):
     y_pred = model.predict(df)
     return y_pred.tolist()
-@app.get("/predict")
+@app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     content = await file.read()
     df = pd.read_csv(file.file)
@@ -109,7 +109,7 @@ async def predict(file: UploadFile = File(...)):
 class DataFramePayload(BaseModel):
     json_str: str
 
-@app.post("/receivedataframe/")
+@app.post("/receivedataframe")
 async def receivedataframe(payload: DataFramePayload):
     # Convert the JSON string from the Pydantic model to a DataFrame
     df = pd.read_json(payload.json_str, orient='split')
