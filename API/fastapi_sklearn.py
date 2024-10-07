@@ -30,7 +30,30 @@ class DataFramePayload(BaseModel):
 async def receivedataframe(payload: DataFramePayload):
     # Convert the JSON string from the Pydantic model to a DataFrame
     df = pd.read_json(payload.json_str, orient='split')
-    return model_predict(df)
+    df.rename(columns={
+        'educational-num': 'educational_num',
+        'marital-status': 'marital_status',
+        'capital-gain': 'capital_gain',
+        'capital-loss': 'capital_loss',
+        'hours-per-week': 'hours_per_week',
+        'native-country': 'native_country',
+        'income_>50K': 'income_50K'
+    }, inplace=True)
+    # Define a mapping for categorical columns to integer values
+    categorical_columns = [
+        'workclass', 'education', 'marital_status', 'occupation',
+        'relationship', 'race', 'gender', 'native_country'
+    ]
+    # Convert categorical columns to integers
+    for column in categorical_columns:
+        df[column] = df[column].astype('category').cat.codes
+    # Convert remaining columns to appropriate integer types
+    for column in df.columns:
+        if column == 'age':
+            df[column] = df[column].astype('uint8')
+        else:
+            df[column] = df[column].astype('uint32')
+        return model_predict(df)
 
 @app.post("/test")
 async def test(payload: str):
