@@ -10,7 +10,7 @@ deploy_staging:
     - gcloud auth activate-service-account --key-file=/tmp/service-acct.json
     - gcloud config set project $projectname # for project ID
     - gcloud builds submit  --config=cloudbuild.yaml --substitutions=_PROJECT_ID=$projectname,_ARTIFACT_REPO=$ARTIFACT_REPO,_ENV_API_NAME=$ENV_API_NAME,\
-      _ENV_ST_NAME=$ENV_ST_NAME,_IMAGE_NAME_FS=$IMAGE_NAME_FS,_IMAGE_NAME_ST=$IMAGE_NAME_ST,_ENV=$ENV,_SERVICE_NAME=$SERVICE_NAME .
+      ENV_ST_NAME=$ENV_ST_NAME,IMAGE_NAME_FS=$IMAGE_NAME_FS,IMAGE_NAME_ST=$IMAGE_NAME_ST,_ENV=$ENV,_SERVICE_NAME=$SERVICE_NAME .
   variables:
     ENV_API_NAME: "api"
     ENV_ST_NAME: "streamlit"
