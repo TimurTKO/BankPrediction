@@ -3,3 +3,7 @@ uvicorn
 fastapi
 joblib
 pydantic
+imblearn
+xgboost
+mlflow
+python-multipart

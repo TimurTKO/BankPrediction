@@ -11,7 +11,7 @@ RN_STATE = 42
 
 app = FastAPI()
 
-model = joblib.load("../bestmodel.pkl")
+model = joblib.load("bestmodel.pkl")
 
 def model_predict(df):
     y_pred = model.predict(df)
@@ -53,7 +53,7 @@ async def receivedataframe(payload: DataFramePayload):
             df[column] = df[column].astype('uint8')
         else:
             df[column] = df[column].astype('uint32')
-        return model_predict(df)
+    return model_predict(df)
 
 @app.post("/test")
 async def test(payload: str):

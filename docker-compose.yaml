@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+  spark:
+    build: .
+    ports:
+      - "8096:19888"
+    volumes:
+      - /home/septim243/Spark/files:/files
+      - /home/septim243/Spark/transfer:/app/transfer
+
+
+  mlflow:
+    build:  mlflow
+    #image: bitnami/mlflow:latest
+    #build:
+    #    context: .
+    #   dockerfile: mlflow/Dockerfile
+    #command: mlflow server -h 0.0.0.0 -p 5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - /home/septim243/mlruns:/app/mlruns
+      - /home/septim243/mlflow:/app/mlflow

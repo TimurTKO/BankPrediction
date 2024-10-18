@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  fastapi:
+    build: .  
+    ports:
+      - "8000:8000"
+    volumes:
+      - /home/septim243/API:/app/API 
+    
+
+  streamlit:
+    build: streamlit  # Путь до директории с приложением Streamlit и Dockerfile
+    ports:
+      - "8501:8501"
+    volumes:
+      - /home/septim243/API/streamlit:/app/streamlit
+      
+  
+

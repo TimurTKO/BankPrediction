@@ -5,7 +5,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt --no-cache-dir
 COPY ../bestmodel.pkl .
 COPY fastapi_sklearn.py .
-ENTRYPOINT ["uvicorn", "fastapi_sklearn:app", "--host", "0.0.0.0", "--port", "8050"]
+ENTRYPOINT ["uvicorn", "fastapi_sklearn:app", "--host", "0.0.0.0", "--port", "8000"]
 
 
 
