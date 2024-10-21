@@ -47,7 +47,7 @@ steps:
         "managed",
         "--allow-unauthenticated",
         "--port",
-        "8004"
+        "8000"
       ]
   # deploy Streamlit to Cloud Run
   - name: "gcr.io/cloud-builders/gcloud"
