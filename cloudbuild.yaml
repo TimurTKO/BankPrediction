@@ -32,6 +32,31 @@ steps:
         "push",
         "us-central1-docker.pkg.dev/$_PROJECT_ID/$_ARTIFACT_REPO/$_IMAGE_NAME_ST:$_ENV_ST_NAME"
       ]
+      
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "run",
+        "services",
+        "add-iam-policy-binding",
+        "$_IMAGE_NAME_FS",
+        "--member",
+        "allUsers",
+        "--role",
+        "roles/run.invoker"
+      ]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "run",
+        "services",
+        "add-iam-policy-binding",
+        "$_IMAGE_NAME_ST",
+        "--member",
+        "allUsers",
+        "--role",
+        "roles/run.invoker"
+      ]  
   # deploy FastAPI to Cloud Run
   - name: "gcr.io/cloud-builders/gcloud"
     args:
