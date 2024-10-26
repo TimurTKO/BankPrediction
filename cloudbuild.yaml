@@ -82,7 +82,7 @@ steps:
         "--port",
         "8000"
       ]
-  # deploy Streamlit to Cloud Run
+  # deploy Streamlit to Cloud run
   - name: "gcr.io/cloud-builders/gcloud"
     args:
       [
