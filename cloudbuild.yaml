@@ -45,7 +45,9 @@ steps:
         "--region",
         "europe-north1",
         "--role",
-        "roles/run.invoker"
+        "roles/run.invoker",
+         "--impersonate-service-account",
+      "cicd-56@inspired-bebop-436018-t4.iam.gserviceaccount.com"
       ]
   - name: "gcr.io/cloud-builders/gcloud"
     args:
@@ -59,7 +61,9 @@ steps:
         "--region",
         "europe-north1",
         "--role",
-        "roles/run.invoker"
+        "roles/run.invoker",
+        "--impersonate-service-account",
+      "cicd-56@inspired-bebop-436018-t4.iam.gserviceaccount.com"
       ]  
   # deploy FastAPI to Cloud Run
   - name: "gcr.io/cloud-builders/gcloud"
