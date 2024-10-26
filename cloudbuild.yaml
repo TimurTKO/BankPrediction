@@ -42,6 +42,8 @@ steps:
         "$_IMAGE_NAME_FS",
         "--member",
         "allUsers",
+        "--region",
+        "europe-north1",
         "--role",
         "roles/run.invoker"
       ]
@@ -54,6 +56,8 @@ steps:
         "$_IMAGE_NAME_ST",
         "--member",
         "allUsers",
+        "--region",
+        "europe-north1",
         "--role",
         "roles/run.invoker"
       ]  
