@@ -1,6 +1,7 @@
 FROM python:3.10-slim
 USER root
 workdir /abc
+RUN pip install --upgrade pip
 COPY requirements.txt .
 RUN pip install -r requirements.txt --no-cache-dir
 COPY ./bestmodel.pkl .
