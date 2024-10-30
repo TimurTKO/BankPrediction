@@ -1,8 +1,8 @@
 image: google/cloud-sdk:alpine
 
 deploy_staging:
-  stage: deploy
-  environment: staging
+  stage: deploy   # stage name
+  environment: staging # environment name
   only:
     - main
   script:
