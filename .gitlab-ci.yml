@@ -9,11 +9,21 @@ deploy_staging:
     - cp $jsonkey12 /tmp/service-acct.json #Used for authentication
     - gcloud auth activate-service-account --key-file=/tmp/service-acct.json
     - gcloud config set project $projectname # for project id
-    - gcloud builds submit  --config=cloudbuild.yaml --substitutions=_PROJECT_ID=$projectname,_ARTIFACT_REPO=$ARTIFACT_REPO,_ENV_API_NAME=$ENV_API_NAME,_ENV_ST_NAME=$ENV_ST_NAME,_IMAGE_NAME_FS=$IMAGE_NAME_FS,_IMAGE_NAME_ST=$IMAGE_NAME_ST .
+    #- gcloud builds submit  --config=cloudbuild.yaml --substitutions=_PROJECT_ID=$projectname,_ARTIFACT_REPO=$ARTIFACT_REPO,_ENV_API_NAME=$ENV_API_NAME,_ENV_ST_NAME=$ENV_ST_NAME,_IMAGE_NAME_FS=$IMAGE_NAME_FS,_IMAGE_NAME_ST=$IMAGE_NAME_ST .
+     
+     # Step 1: Deploy FastAPI and capture the URL
+    - gcloud builds submit --config=cloudbuild.yaml --substitutions=_PROJECT_ID=$projectname,_ARTIFACT_REPO=$ARTIFACT_REPO,_ENV_API_NAME=$ENV_API_NAME,_IMAGE_NAME_FS=$IMAGE_NAME_FS .
+    - export FASTAPI_URL=$(gcloud run services describe $ENV_API_NAME --region $REGION --format 'value(status.url)')
+    
+    # Step 2: Deploy Streamlit with FastAPI URL as an environment variable
+    - gcloud builds submit --config=cloudbuild.yaml --substitutions=_PROJECT_ID=$projectname,_ARTIFACT_REPO=$ARTIFACT_REPO,_ENV_ST_NAME=$ENV_ST_NAME,_IMAGE_NAME_ST=$IMAGE_NAME_ST .
+    - gcloud run deploy $ENV_ST_NAME --image=${ARTIFACT_REPO}/${IMAGE_NAME_ST} --region $REGION --allow-unauthenticated --set-env-vars FASTAPI_URL=$FASTAPI_URL
+
   variables:
     ENV_API_NAME: "api-0.1"
     ENV_ST_NAME: "streamlit-0.1"
     IMAGE_NAME_FS: "fastapi"
     IMAGE_NAME_ST: "streamlit"
     ARTIFACT_REPO: "bankprediction"
+    REGION: "europe-north1" # new addition
   
