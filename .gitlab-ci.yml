@@ -1,13 +1,13 @@
 image: google/cloud-sdk:alpine
 
 variables:
-  ENV_API_NAME: "fastapi-service"
-  ENV_ST_NAME: "streamlit-service"
-  IMAGE_NAME_FS: "fastapi-app"
-  IMAGE_NAME_ST: "streamlit-app"
-  ARTIFACT_REPO: "bankprediction"
-  REGION: "europe-north1"
-  GOOGLE_PROJECT_ID: "$projectname"  # проект GCP
+  ENV_API_NAME: "api-0.1"             # Имя сервиса FastAPI
+  ENV_ST_NAME: "streamlit-0.1"         # Имя сервиса Streamlit
+  IMAGE_NAME_FS: "fastapi"              # Имя образа для FastAPI
+  IMAGE_NAME_ST: "streamlit"            # Имя образа для Streamlit
+  ARTIFACT_REPO: "bankprediction"       # Название репозитория артефактов
+  REGION: "europe-north1"               # Регион для развертывания
+  GOOGLE_PROJECT_ID: "$projectname"     # ID проекта GCP
 
 stages:
   - deploy
@@ -15,35 +15,40 @@ stages:
 # Этап для развертывания FastAPI
 deploy_fastapi:
   stage: deploy
+  environment: staging
+  only:
+    - main
   script:
     - cp $jsonkey12 /tmp/service-acct.json  # Аутентификация
     - gcloud auth activate-service-account --key-file=/tmp/service-acct.json
-    - gcloud config set project $GOOGLE_PROJECT_ID
+    - gcloud config set project $GOOGLE_PROJECT_ID  # Установка ID проекта
     # Развертываем FastAPI сервис
-    - gcloud run deploy "$ENV_API_NAME" \
-        --image="${REGION}-docker.pkg.dev/$GOOGLE_PROJECT_ID/$ARTIFACT_REPO/$IMAGE_NAME_FS:latest" \
-        --region="$REGION" \
-        --platform="managed" \
+    - gcloud run deploy $ENV_API_NAME \
+        --image=${REGION}-docker.pkg.dev/$GOOGLE_PROJECT_ID/$ARTIFACT_REPO/$IMAGE_NAME_FS:latest \
+        --region=$REGION \
+        --platform=managed \
         --allow-unauthenticated \
-        --set-env-vars="APP_ENV=production"
-  only:
-    - main
+        --set-env-vars=APP_ENV=production
+    # Проверяем, что сервис создан
+    - gcloud run services describe $ENV_API_NAME --region=$REGION
 
 # Этап для развертывания Streamlit
 deploy_streamlit:
   stage: deploy
+  needs: ["deploy_fastapi"]  # Зависимость от успешного выполнения deploy_fastapi
+  environment: staging
+  only:
+    - main
   script:
     - cp $jsonkey12 /tmp/service-acct.json  # Аутентификация
     - gcloud auth activate-service-account --key-file=/tmp/service-acct.json
-    - gcloud config set project $GOOGLE_PROJECT_ID
+    - gcloud config set project $GOOGLE_PROJECT_ID  # Установка ID проекта
     # Получаем URL FastAPI для передачи в Streamlit
-    - FASTAPI_URL=$(gcloud run services describe "$ENV_API_NAME" --region="$REGION" --format='value(status.url)')
+    - FASTAPI_URL=$(gcloud run services describe $ENV_API_NAME --region=$REGION --format='value(status.url)')
     # Развертываем Streamlit сервис и передаем URL FastAPI как переменную окружения
-    - gcloud run deploy "$ENV_ST_NAME" \
-        --image="${REGION}-docker.pkg.dev/$GOOGLE_PROJECT_ID/$ARTIFACT_REPO/$IMAGE_NAME_ST:latest" \
-        --region="$REGION" \
-        --platform="managed" \
+    - gcloud run deploy $ENV_ST_NAME \
+        --image=${REGION}-docker.pkg.dev/$GOOGLE_PROJECT_ID/$ARTIFACT_REPO/$IMAGE_NAME_ST:latest \
+        --region=$REGION \
+        --platform=managed \
         --allow-unauthenticated \
-        --set-env-vars="FASTAPI_URL=$FASTAPI_URL"
-  only:
-    - main
+        --set-env-vars=FASTAPI_URL=$FASTAPI_URL
