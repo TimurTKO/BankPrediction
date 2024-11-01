@@ -32,7 +32,7 @@ deploy_fastapi:
     # Проверяем, что сервис создан
     - gcloud run services describe $ENV_API_NAME --region=$REGION
 
-# Этап для развертывания Streamlit
+# Этап для развертывания Streamlit с зависимостью от FastAPI
 deploy_streamlit:
   stage: deploy
   needs: ["deploy_fastapi"]  # Зависимость от успешного выполнения deploy_fastapi
