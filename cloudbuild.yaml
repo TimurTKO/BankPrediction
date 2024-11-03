@@ -40,7 +40,7 @@ steps:
     args:
       [
         "-c",
-        "export FASTAPI_URL=$(gcloud run services describe $_IMAGE_NAME_FS --region europe-north1 --format 'value(status.url)') && echo FASTAPI_URL=$FASTAPI_URL"
+        "export _FASTAPI_URL=$(gcloud run services describe $_IMAGE_NAME_FS --region europe-north1 --format 'value(status.url)') && echo _FASTAPI_URL=$FASTAPI_URL"
       ]
   - name: "gcr.io/cloud-builders/docker"
     args:
@@ -74,7 +74,7 @@ steps:
         "--port",
         "8501",
         "--set-env-vars",
-        "FASTAPI_URL=$FASTAPI_URL" # Set FastAPI URL as an environment variable
+        "_FASTAPI_URL=$FASTAPI_URL" # Set FastAPI URL as an environment variable
       ]
 
 options:
