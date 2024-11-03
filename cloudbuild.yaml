@@ -1,5 +1,5 @@
 steps:
-  # build the image
+  # Build and push FastAPI container image
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
@@ -7,71 +7,22 @@ steps:
         "API",
         "-t",
         "us-central1-docker.pkg.dev/$_PROJECT_ID/$_ARTIFACT_REPO/$_IMAGE_NAME_FS:$_ENV_API_NAME"
-        
       ]
-  - name: "gcr.io/cloud-builders/docker" # build the image
-    args:
-      [
-        "build",
-        "API/streamlit",
-        "-t",
-        "us-central1-docker.pkg.dev/$_PROJECT_ID/$_ARTIFACT_REPO/$_IMAGE_NAME_ST:$_ENV_ST_NAME"
-
-      ]
-    # push FastAPI container image
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "push",
         "us-central1-docker.pkg.dev/$_PROJECT_ID/$_ARTIFACT_REPO/$_IMAGE_NAME_FS:$_ENV_API_NAME"
       ]
-  # push Streamlit container image for deployment
-  - name: "gcr.io/cloud-builders/docker"
-    args:
-      [
-        "push",
-        "us-central1-docker.pkg.dev/$_PROJECT_ID/$_ARTIFACT_REPO/$_IMAGE_NAME_ST:$_ENV_ST_NAME"
-      ]
-      
-  - name: "gcr.io/cloud-builders/gcloud"  # allow all users to access the service
-    args:
-      [
-        "run",
-        "services",
-        "add-iam-policy-binding",
-        "$_IMAGE_NAME_FS",
-        "--member",
-        "allUsers",
-        "--region",
-        "europe-north1",
-        "--role",
-        "roles/run.invoker",
-        "--impersonate-service-account",
-        "cicd9-385@inspired-bebop-436018-t4.iam.gserviceaccount.com"
-      ]
+
+  # Deploy FastAPI to Cloud Run and get the URL
   - name: "gcr.io/cloud-builders/gcloud"
-    args:
-      [
-        "run",
-        "services",
-        "add-iam-policy-binding",
-        "$_IMAGE_NAME_ST",
-        "--member",
-        "allUsers",
-        "--region",
-        "europe-north1",
-        "--role",
-        "roles/run.invoker",
-        "--impersonate-service-account",
-        "cicd9-385@inspired-bebop-436018-t4.iam.gserviceaccount.com"
-      ]  
-  # deploy FastAPI to Cloud Run
-  - name: "gcr.io/cloud-builders/gcloud"
+    id: "deploy-fastapi"
     args:
       [
         "run",
         "deploy",
-        "$_IMAGE_NAME_FS", # FastAPI name service
+        "$_IMAGE_NAME_FS",
         "--image",
         "us-central1-docker.pkg.dev/$_PROJECT_ID/$_ARTIFACT_REPO/$_IMAGE_NAME_FS:$_ENV_API_NAME",
         "--region",
@@ -82,13 +33,37 @@ steps:
         "--port",
         "8000"
       ]
-  # deploy Streamlit to Cloud run
+    # Capture the URL of the deployed FastAPI service
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "get-fastapi-url"
+    entrypoint: "bash"
+    args:
+      [
+        "-c",
+        "export FASTAPI_URL=$(gcloud run services describe $_IMAGE_NAME_FS --region europe-north1 --format 'value(status.url)') && echo FASTAPI_URL=$FASTAPI_URL"
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "API/streamlit",
+        "-t",
+        "us-central1-docker.pkg.dev/$_PROJECT_ID/$_ARTIFACT_REPO/$_IMAGE_NAME_ST:$_ENV_ST_NAME"
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "us-central1-docker.pkg.dev/$_PROJECT_ID/$_ARTIFACT_REPO/$_IMAGE_NAME_ST:$_ENV_ST_NAME"
+      ]
+
+  # Deploy Streamlit to Cloud Run, with the FastAPI URL as an environment variable
   - name: "gcr.io/cloud-builders/gcloud"
     args:
       [
         "run",
         "deploy",
-        "$_IMAGE_NAME_ST", #  Streamlit name service
+        "$_IMAGE_NAME_ST",
         "--image",
         "us-central1-docker.pkg.dev/$_PROJECT_ID/$_ARTIFACT_REPO/$_IMAGE_NAME_ST:$_ENV_ST_NAME",
         "--region",
@@ -97,7 +72,9 @@ steps:
         "managed",
         "--allow-unauthenticated",
         "--port",
-        "8501"
+        "8501",
+        "--set-env-vars",
+        "FASTAPI_URL=$FASTAPI_URL" # Set FastAPI URL as an environment variable
       ]
 
 options:

@@ -1,60 +1,19 @@
 image: google/cloud-sdk:alpine
 
-stages:
-  - build
-  - deploy
-
-# Переменные для замены и использования в пайплайне
-variables:
-  ENV_API_NAME: "api-0.1"
-  ENV_ST_NAME: "streamlit-0.1"
-  IMAGE_NAME_FS: "fastapi"
-  IMAGE_NAME_ST: "streamlit"
-  ARTIFACT_REPO: "bankprediction"
-  GCR_REGION: "us-central1"
-  FASTAPI_SERVICE_NAME: "fastapi-service"   # Название сервиса FastAPI в Cloud Run
-  STREAMLIT_SERVICE_NAME: "streamlit-service" # Название сервиса Streamlit в Cloud Run
-
-# Аутентификация перед сборкой и деплоем
-before_script:
-  - cp $jsonkey12 /tmp/service-acct.json # Файл для аутентификации
-  - gcloud auth activate-service-account --key-file=/tmp/service-acct.json
-  - gcloud config set project $projectname
-  - gcloud auth configure-docker ${GCR_REGION}-docker.pkg.dev
-
-# Сборка FastAPI контейнера и загрузка в Container Registry
-build_fastapi:
-  stage: build
-  script:
-    - docker build -t ${GCR_REGION}-docker.pkg.dev/$projectname/$ARTIFACT_REPO/$IMAGE_NAME_FS:latest ./fastapi
-    - docker push ${GCR_REGION}-docker.pkg.dev/$projectname/$ARTIFACT_REPO/$IMAGE_NAME_FS:latest
+deploy_staging:
+  stage: deploy   # stage name
+  environment: staging # environment name
   only:
     - main
-
-# Сборка Streamlit контейнера и загрузка в Container Registry
-build_streamlit:
-  stage: build
   script:
-    - docker build -t ${GCR_REGION}-docker.pkg.dev/$projectname/$ARTIFACT_REPO/$IMAGE_NAME_ST:latest ./streamlit
-    - docker push ${GCR_REGION}-docker.pkg.dev/$projectname/$ARTIFACT_REPO/$IMAGE_NAME_ST:latest
-  only:
-    - main
-
-# Деплой FastAPI в Cloud Run
-deploy_fastapi:
-  stage: deploy
-  script:
-    - gcloud run deploy $FASTAPI_SERVICE_NAME --image ${GCR_REGION}-docker.pkg.dev/$projectname/$ARTIFACT_REPO/$IMAGE_NAME_FS:latest --region $GCR_REGION --platform managed --allow-unauthenticated
-  only:
-    - main
-
-# Деплой Streamlit в Cloud Run с установкой переменной FASTAPI_URL
-deploy_streamlit:
-  stage: deploy
-  script:
-    # Получение URL FastAPI сервиса для передачи в Streamlit
-    - export FASTAPI_URL=$(gcloud run services describe $FASTAPI_SERVICE_NAME --region $GCR_REGION --format 'value(status.url)')
-    # Деплой Streamlit с установкой переменной окружения для доступа к FastAPI
-    - gcloud run deploy $STREAMLIT_SERVICE_NAME --image ${GCR_REGION}-docker.pkg.dev/$projectname/$ARTIFACT_REPO/$IMAGE_NAME_ST:latest --region $GCR_REGION --platform managed --allow-unauthenticated --set-env-vars FASTAPI_URL=$FASTAPI_URL
-  only:
-    - main
+    - cp $jsonkey12 /tmp/service-acct.json #Used for authentication
+    - gcloud auth activate-service-account --key-file=/tmp/service-acct.json
+    - gcloud config set project $projectname # for project id
+    - gcloud builds submit  --config=cloudbuild.yaml --substitutions=_PROJECT_ID=$projectname,_ARTIFACT_REPO=$ARTIFACT_REPO,_ENV_API_NAME=$ENV_API_NAME,_ENV_ST_NAME=$ENV_ST_NAME,_IMAGE_NAME_FS=$IMAGE_NAME_FS,_IMAGE_NAME_ST=$IMAGE_NAME_ST .
+  variables:
+    ENV_API_NAME: "api-0.1"
+    ENV_ST_NAME: "streamlit-0.1"
+    IMAGE_NAME_FS: "fastapi"
+    IMAGE_NAME_ST: "streamlit"
+    ARTIFACT_REPO: "bankprediction"
+  

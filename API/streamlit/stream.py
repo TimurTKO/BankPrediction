@@ -1,11 +1,13 @@
 import streamlit as st
 import pandas as pd
 import requests
+import os
 
 
 
 st.title("Предсказание на основе модели")
 st.write("Загрузите файл с данными для предсказания")
+st.write(os.environ.get('FASTAPI_URL'))
 
 uploaded_file = st.file_uploader("Выберите CSV файл", type="csv")
 
@@ -19,9 +21,12 @@ if click:
         }
 
 
-        url = "http://fastapi:8000/receivedataframe"
+        #url = "http://fastapi:8000/receivedataframe"
         
-        response = requests.post(url, json=payload)
+        FASTAPI_URL = os.getenv('FASTAPI_URL')
+        FASTAPI_URL = f'{FASTAPI_URL}/receivedataframe'
+
+        response = requests.post(FASTAPI_URL, json=payload)
 
         predictions = response.json()
 
