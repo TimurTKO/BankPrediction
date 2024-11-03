@@ -34,13 +34,21 @@ steps:
         "8000"
       ]
     # Capture the URL of the deployed FastAPI service
-  - name: "gcr.io/cloud-builders/gcloud"
+    #name: "gcr.io/cloud-builders/gcloud"
+    #id: "get-fastapi-url"
+    #entrypoint: "bash"
+    #args:
+      #[
+        #"-c",
+        #"export _FASTAPI_URL=$(gcloud run services describe $_IMAGE_NAME_FS --region europe-north1 --format 'value(status.url)') && echo _FASTAPI_URL=$_FASTAPI_URL"
+      #]
+    -  name: "gcr.io/cloud-builders/gcloud"
     id: "get-fastapi-url"
     entrypoint: "bash"
     args:
       [
         "-c",
-        "export _FASTAPI_URL=$(gcloud run services describe $_IMAGE_NAME_FS --region europe-north1 --format 'value(status.url)') && echo _FASTAPI_URL=$_FASTAPI_URL"
+        "export _FASTAPI_URL=$(gcloud run services describe $_IMAGE_NAME_FS --region europe-north1 --format 'value(status.url)')"
       ]
   - name: "gcr.io/cloud-builders/docker"
     args:
