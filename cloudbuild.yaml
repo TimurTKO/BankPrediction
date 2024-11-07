@@ -49,7 +49,7 @@ steps:
     args:
       [
         "-c",
-        "export _FASTAPI_URL=gcloud run services describe $_IMAGE_NAME_FS --region europe-north1 --format 'value(status.url)'"
+        "export _FASTAPI_URL=$(gcloud run services describe $_IMAGE_NAME_FS --region europe-north1 --format 'value(status.url)')"
       ]
   - name: "gcr.io/cloud-builders/docker"
     args:
