@@ -83,7 +83,7 @@ steps:
         "--port",
         "8501",
         "--set-env-vars",
-        #"FASTAPI_URL=$FASTAPI_URL" # Set FastAPI URL as an environment variable
+        "FASTAPI_URL=$FASTAPI_URL" # Set FastAPI URL as an environment variable
       ]
 options:
   logging: CLOUD_LOGGING_ONLY

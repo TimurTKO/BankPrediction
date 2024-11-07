@@ -16,5 +16,5 @@ deploy_staging:
     IMAGE_NAME_FS: "fastapi"
     IMAGE_NAME_ST: "streamlit"
     ARTIFACT_REPO: "bankprediction"
-    FASTAPI_URL: "_FASTAPI_URL"
+    FASTAPI_URL: "FASTAPI_URL"
   
