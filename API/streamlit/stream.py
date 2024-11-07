@@ -24,7 +24,7 @@ if click:
 
         #url = "http://fastapi:8000/receivedataframe"
          # URL эндпоинта FastAPI для обработки DataFrame
-        FASTAPI_URL = os.getenv('_FASTAPI_URL')
+        FASTAPI_URL = os.getenv('FASTAPI_URL')
         url = f"{FASTAPI_URL}/receivedataframe"
 
 
