@@ -25,10 +25,15 @@ if click:
         #url = "http://fastapi:8000/receivedataframe"
          # URL эндпоинта FastAPI для обработки DataFrame
         FASTAPI_URL = os.getenv('FASTAPI_URL')
-        url = f"{FASTAPI_URL}/receivedataframe"
+        #url = f"{FASTAPI_URL}/receivedataframe"
+        # Checking if FASTAPI_URL is set
+        if not FASTAPI_URL:
+            st.error("URL сервиса FastAPI не найден.")
+        else:
+            url = f"{FASTAPI_URL}/receivedataframe"
+            response = requests.post(url, json=payload)
 
-
-        response = requests.post(FASTAPI_URL, json=payload)
+        #response = requests.post(FASTAPI_URL, json=payload)
 
         predictions = response.json()
 
