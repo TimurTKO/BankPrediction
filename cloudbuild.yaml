@@ -83,7 +83,7 @@ steps:
         "--port",
         "8501",
         "--set-env-vars",
-        "FASTAPI_URL=$(gcloud run services describe $_IMAGE_NAME_FS --region europe-north1 --format 'value(status.url)')" # Set FastAPI URL as an environment variable
+        "FASTAPI_URL=${(gcloud run services describe $_IMAGE_NAME_FS --region europe-north1 --format 'value(status.url)')}" # Set FastAPI URL as an environment variable
       ]
   # - name: "gcr.io/cloud-builders/gcloud"
   #   id: "deploy-streamlit"
