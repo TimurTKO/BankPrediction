@@ -9,12 +9,12 @@ deploy_staging:
     - cp $jsonkey12 /tmp/service-acct.json #Used for authentication
     - gcloud auth activate-service-account --key-file=/tmp/service-acct.json
     - gcloud config set project $projectname # for project id
-    - gcloud builds submit  --config=cloudbuild.yaml --substitutions=_PROJECT_ID=$projectname,_ARTIFACT_REPO=$ARTIFACT_REPO,_ENV_API_NAME=$ENV_API_NAME,_ENV_ST_NAME=$ENV_ST_NAME,_IMAGE_NAME_FS=$IMAGE_NAME_FS,_IMAGE_NAME_ST=$IMAGE_NAME_ST,_FASTAPI_URL=$FASTAPI_URL .
+    - gcloud builds submit  --config=cloudbuild.yaml --substitutions=_PROJECT_ID=$projectname,_ARTIFACT_REPO=$ARTIFACT_REPO,_ENV_API_NAME=$ENV_API_NAME,_ENV_ST_NAME=$ENV_ST_NAME,_IMAGE_NAME_FS=$IMAGE_NAME_FS,_IMAGE_NAME_ST=$IMAGE_NAME_ST .
   variables:
     ENV_API_NAME: "api-0.1"
     ENV_ST_NAME: "streamlit-0.1"
     IMAGE_NAME_FS: "fastapi"
     IMAGE_NAME_ST: "streamlit"
     ARTIFACT_REPO: "bankprediction"
-    FASTAPI_URL: "FASTAPI_URL"
+    #FASTAPI_URL: "FASTAPI_URL"
   
