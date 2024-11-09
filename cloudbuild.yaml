@@ -87,6 +87,7 @@ steps:
   #     ]
   - name: "gcr.io/cloud-builders/gcloud"
     id: "deploy-streamlit"
+    entrypoint: "bash"
     args:
       [
         "-c",
