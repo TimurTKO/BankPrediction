@@ -1,6 +1,6 @@
-import gradio as gr
+import gradio as gr # Importing Gradio
 import clickhouse_connect
-from dotenv import load_dotenv
+from dotenv import load_dotenv # Importing load_dotenv
 import os
 load_dotenv(".env")
 
@@ -11,7 +11,7 @@ CLICKHOUSE_USER_PASSWORD = os.getenv("CLICKHOUSE_USER_PASSWORD")
 
 client = clickhouse_connect.get_client(host=CLICKHOUSE_IP,
                                        username=CLICKHOUSE_USER,
-                                       password=CLICKHOUSE_USER_PASSWORD)
+                                       password=CLICKHOUSE_USER_PASSWORD) # Connecting to Clickhouse
 
 def read_file(file):
     with open(file.name, 'r', encoding='utf-8') as f:
