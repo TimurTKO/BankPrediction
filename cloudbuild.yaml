@@ -85,7 +85,7 @@ steps:
         "--set-env-vars",
         "FASTAPI_URL= https://fastapi-972701618815.europe-north1.run.app" # Set FastAPI URL as an environment variable for Streamlit as hardcoding the URL is not recommended
       ]
-  # - name: "gcr.io/cloud-builders/gcloud"
+  # - name: "gcr.io/cloud-builders/gcloud" # Deploy Streamlit to Cloud Run, with the FastAPI URL as an environment variable
   #   id: "deploy-streamlit"
   #   entrypoint: "bash"
   #   args:
