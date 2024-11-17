@@ -67,7 +67,7 @@ steps:
       ]
 
   #Deploy Streamlit to Cloud Run, with the FastAPI URL as an environment variable  
-  - name: "gcr.io/cloud-builders/gcloud"
+  - name: "gcr.io/cloud-builders/gcloud" # Deploy Streamlit to Cloud Run, with the FastAPI URL as an environment variable
     args:
       [
         "run",
