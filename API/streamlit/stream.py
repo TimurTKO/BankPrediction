@@ -5,8 +5,8 @@ import os
 
 #st.write("Переменные окружения:", os.environ)
 st.title("Предсказание на основе модели")
-st.write("Загрузите файл с данными для предсказания")
-st.write(os.environ.get('FASTAPI_URL'))
+st.write("Загрузите файл с данными для предсказания") # Проверка переменной окружения
+st.write(os.environ.get('FASTAPI_URL')) # Проверка переменной окружения
 
 uploaded_file = st.file_uploader("Выберите CSV файл", type="csv")
 
