@@ -9,6 +9,9 @@ services:
       - /home/septim243/Spark/transfer:/app/transfer
 
 
+
+
+
   mlflow:
     build:  mlflow
     #image: bitnami/mlflow:latest
